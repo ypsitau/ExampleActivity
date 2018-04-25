@@ -1,10 +1,11 @@
-package io.github.ypsitau.exampl44eactivity;
+package io.github.ypsitau.exampleactivity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import io.github.ypsitau.exampleactivity.R;
 
@@ -13,16 +14,17 @@ public class MainActivity extends AppCompatActivity {
 		cntClickFruit,
 		cntClickColor,
 	}
-	int cntClickFruit;
-	int cntClickColor;
+	int cntFruit;
+	int cntColor;
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		LogPrintf("onCreate()");
 		setContentView(R.layout.activity_main);
-		RadioGroup radioGroup_fruit = findViewById(R.id.radioGroup_fruit);
-		RadioGroup radioGroup_color = findViewById(R.id.radioGroup_color);
-		//radioGroup_fruit.check(R.id.radioButton_banana);
-		//radioGroup_color.check(R.id.radioButton_blue);
+		final RadioGroup radioGroup_fruit = findViewById(R.id.radioGroup_fruit);
+		final RadioGroup radioGroup_color = findViewById(R.id.radioGroup_color);
+		final TextView textView_cntFruit = findViewById(R.id.textView_cntFruit);
+		final TextView textView_cntColor = findViewById(R.id.textView_cntColor);
 		radioGroup_fruit.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -30,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
 				if (!group.findViewById(checkedId).isPressed()) return;
 				LogPrintf("onCheckedChanged(): fruit=%s",
 						((RadioButton)group.findViewById(checkedId)).getText());
-				cntClickFruit++;
+				cntFruit++;
+				textView_cntFruit.setText(String.format("%d", cntFruit));
 			}
 		});
 		radioGroup_color.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -40,16 +43,17 @@ public class MainActivity extends AppCompatActivity {
 				if (!group.findViewById(checkedId).isPressed()) return;
 				LogPrintf("onCheckedChanged(): color=%s",
 						((RadioButton)group.findViewById(checkedId)).getText());
-				cntClickColor++;
+				cntColor++;
+				textView_cntColor.setText(String.format("%d", cntColor));
 			}
 		});
 		if (savedInstanceState == null) {
 			LogPrintf("savedInstanceState == null");
-			cntClickFruit = 0;
-			cntClickColor = 0;
-		} else {
+			cntFruit = 0;
+			cntColor = 0;
+			textView_cntFruit.setText(String.format("%d", cntFruit));
+			textView_cntColor.setText(String.format("%d", cntColor));
 		}
-		super.onCreate(savedInstanceState);
 	}
 	@Override
 	protected void onStart() {
@@ -86,16 +90,15 @@ public class MainActivity extends AppCompatActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		LogPrintf("onSaveInstanceState()");
-		outState.putInt(Key.cntClickFruit.name(), cntClickFruit);
-		outState.putInt(Key.cntClickColor.name(), cntClickColor);
+		outState.putInt(Key.cntClickFruit.name(), cntFruit);
+		outState.putInt(Key.cntClickColor.name(), cntColor);
 	}
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		cntClickFruit = savedInstanceState.getInt(Key.cntClickFruit.name());
-		cntClickColor = savedInstanceState.getInt(Key.cntClickColor.name());
-		LogPrintf("savedInstanceState != null; fruit:%d color:%d",
-				cntClickFruit, cntClickColor);
+		LogPrintf("onRestoreInstanceState()");
+		cntFruit = savedInstanceState.getInt(Key.cntClickFruit.name());
+		cntColor = savedInstanceState.getInt(Key.cntClickColor.name());
 	}
 	public void LogPrintf(String format, Object... args) {
 		Log.i(getString(R.string.app_name), String.format(format, args));
